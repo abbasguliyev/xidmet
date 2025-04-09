@@ -22,15 +22,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - .:/app
     env_file:
       - .env
     ports:
       - "8000:8000"
     command: >
-            sh -c "python manage.py collectstatic --noinput &&
-             python manage.py makemigrations &&
-             python manage.py migrate &&
-             gunicorn --bind 0.0.0.0:8000 --timeout 300 --worker-class=gevent --worker-connections=1000 --workers=5 core.wsgi"
+            sh -c "python ./src/manage.py collectstatic --noinput &&
+             python ./src/manage.py makemigrations &&
+             python ./src/manage.py migrate &&
+             python ./src/manage.py runserver 0.0.0.0:8000"
     depends_on:
       - xidmet_db
     networks:
